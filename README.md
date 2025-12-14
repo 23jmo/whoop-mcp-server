@@ -2,6 +2,8 @@
 
 A Model Context Protocol (MCP) server that connects your Whoop health data to Claude. Designed to be hosted remotely and used as a custom connector in Claude.ai.
 
+Built using the [Whoop Developer API v2](https://developer.whoop.com/docs/introduction).
+
 ## Features
 
 - **Recovery Data**: Daily recovery scores, HRV, resting heart rate, SpO2, skin temperature
@@ -114,6 +116,17 @@ npm run dev
 └─────────────────────────────────────────────────┘
 ```
 
+## API Endpoints Used
+
+This server uses the following Whoop API v2 endpoints:
+
+- `GET /v2/user/profile/basic` - User profile
+- `GET /v2/user/measurement/body` - Body measurements
+- `GET /v2/cycle` - Physiological cycles (strain data)
+- `GET /v2/recovery` - Recovery scores
+- `GET /v2/activity/sleep` - Sleep records
+- `GET /v2/activity/workout` - Workout records
+
 ## License
 
-MIT
+MIT - See [LICENSE](LICENSE) for details.
