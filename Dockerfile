@@ -22,7 +22,7 @@ RUN npm run build
 RUN mkdir -p /data
 
 ENV DB_PATH=/data/whoop.db
-ENV MCP_MODE=sse
+ENV MCP_MODE=http
 ENV PORT=3000
 
 EXPOSE 3000
