@@ -142,11 +142,11 @@ export class WhoopClient {
   }
 
   async getProfile(): Promise<WhoopUser> {
-    return this.request<WhoopUser>('/v1/user/profile/basic');
+    return this.request<WhoopUser>('/v2/user/profile/basic');
   }
 
   async getBodyMeasurement(): Promise<WhoopBodyMeasurement> {
-    return this.request<WhoopBodyMeasurement>('/v1/user/measurement/body');
+    return this.request<WhoopBodyMeasurement>('/v2/user/measurement/body');
   }
 
   async getCycles(params?: {
@@ -161,7 +161,7 @@ export class WhoopClient {
     if (params?.limit) queryParams.limit = params.limit.toString();
     if (params?.nextToken) queryParams.nextToken = params.nextToken;
 
-    return this.request<WhoopPaginatedResponse<WhoopCycle>>('/v1/cycle', queryParams);
+    return this.request<WhoopPaginatedResponse<WhoopCycle>>('/v2/cycle', queryParams);
   }
 
   async getRecoveries(params?: {
@@ -176,7 +176,7 @@ export class WhoopClient {
     if (params?.limit) queryParams.limit = params.limit.toString();
     if (params?.nextToken) queryParams.nextToken = params.nextToken;
 
-    return this.request<WhoopPaginatedResponse<WhoopRecovery>>('/v1/recovery', queryParams);
+    return this.request<WhoopPaginatedResponse<WhoopRecovery>>('/v2/recovery', queryParams);
   }
 
   async getSleeps(params?: {
@@ -191,7 +191,7 @@ export class WhoopClient {
     if (params?.limit) queryParams.limit = params.limit.toString();
     if (params?.nextToken) queryParams.nextToken = params.nextToken;
 
-    return this.request<WhoopPaginatedResponse<WhoopSleep>>('/v1/activity/sleep', queryParams);
+    return this.request<WhoopPaginatedResponse<WhoopSleep>>('/v2/activity/sleep', queryParams);
   }
 
   async getWorkouts(params?: {
@@ -206,7 +206,7 @@ export class WhoopClient {
     if (params?.limit) queryParams.limit = params.limit.toString();
     if (params?.nextToken) queryParams.nextToken = params.nextToken;
 
-    return this.request<WhoopPaginatedResponse<WhoopWorkout>>('/v1/activity/workout', queryParams);
+    return this.request<WhoopPaginatedResponse<WhoopWorkout>>('/v2/activity/workout', queryParams);
   }
 
   // Helper to fetch all pages
