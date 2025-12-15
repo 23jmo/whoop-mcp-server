@@ -2,6 +2,19 @@
   "name": "whoop-mcp-server",
   "version": "1.0.0",
   "description": "MCP server for Whoop health data integration",
+  "author": "Yuri Dvoinos",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yuridivonis/whoop-mcp-server"
+  },
+  "keywords": [
+    "mcp",
+    "whoop",
+    "claude",
+    "health",
+    "fitness"
+  ],
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
