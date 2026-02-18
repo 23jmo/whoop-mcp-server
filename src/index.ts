@@ -343,6 +343,39 @@ async function main(): Promise<void> {
 		const app = express();
 		app.use(express.json());
 
+		// CORS + Accept header middleware for MCP compatibility
+		app.use((req: Request, res: Response, next) => {
+			res.setHeader('Access-Control-Allow-Origin', '*');
+			res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+			res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Mcp-Session-Id');
+			if (req.method === 'OPTIONS') {
+				res.status(204).end();
+				return;
+			}
+			// MCP StreamableHTTP transport requires text/event-stream in Accept for POST
+			if (req.method === 'POST' && req.path === '/mcp') {
+				const accept = req.headers.accept ?? '';
+				if (!accept.includes('text/event-stream')) {
+					req.headers.accept = accept ? `${accept}, text/event-stream` : 'application/json, text/event-stream';
+				}
+			}
+			next();
+		});
+
+		// OAuth discovery stubs — Claude probes these before connecting
+		app.get('/.well-known/oauth-protected-resource', (req: Request, res: Response) => {
+			res.json({ resource: `https://${req.hostname}`, authorization_servers: [] });
+		});
+		app.get('/.well-known/oauth-protected-resource/mcp', (req: Request, res: Response) => {
+			res.json({ resource: `https://${req.hostname}`, authorization_servers: [] });
+		});
+		app.get('/.well-known/oauth-authorization-server', (_req: Request, res: Response) => {
+			res.status(200).json({});
+		});
+		app.post('/register', (_req: Request, res: Response) => {
+			res.status(200).json({});
+		});
+
 		app.get('/callback', async (req: Request, res: Response) => {
 			const code = req.query.code as string | undefined;
 			if (!code) {
