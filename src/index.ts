@@ -412,7 +412,7 @@ async function main(): Promise<void> {
 				if (sessionId && transports.has(sessionId)) {
 					const session = transports.get(sessionId)!;
 					session.lastAccess = Date.now();
-					await session.transport.handleRequest(req, res);
+					await session.transport.handleRequest(req, res, req.body);
 				} else {
 					res.status(200).json({ name: 'whoop-mcp-server', version: '1.0.0', protocol: 'mcp' });
 				}
@@ -438,7 +438,7 @@ async function main(): Promise<void> {
 					await server.connect(transport);
 				}
 
-				await transport.handleRequest(req, res);
+				await transport.handleRequest(req, res, req.body);
 				return;
 			}
 
