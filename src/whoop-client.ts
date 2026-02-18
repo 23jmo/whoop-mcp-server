@@ -56,17 +56,16 @@ export class WhoopClient {
 	}
 
 	async exchangeCodeForTokens(code: string): Promise<WhoopTokens> {
-		const basicAuth = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64');
 		const response = await fetch(`${WHOOP_AUTH_BASE}/token`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Authorization': `Basic ${basicAuth}`,
-			},
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			body: new URLSearchParams({
 				grant_type: 'authorization_code',
 				code,
+				client_id: this.clientId,
+				client_secret: this.clientSecret,
 				redirect_uri: this.redirectUri,
+				scope: 'offline',
 			}),
 		});
 
@@ -90,16 +89,14 @@ export class WhoopClient {
 			throw new Error('No refresh token available');
 		}
 
-		const basicAuth = Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64');
 		const response = await fetch(`${WHOOP_AUTH_BASE}/token`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'Authorization': `Basic ${basicAuth}`,
-			},
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			body: new URLSearchParams({
 				grant_type: 'refresh_token',
 				refresh_token: this.tokens.refresh_token,
+				client_id: this.clientId,
+				client_secret: this.clientSecret,
 			}),
 		});
 
