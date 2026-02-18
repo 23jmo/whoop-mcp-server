@@ -375,6 +375,17 @@ async function main(): Promise<void> {
 				return;
 			}
 
+			if (req.method === 'GET') {
+				if (sessionId && transports.has(sessionId)) {
+					const session = transports.get(sessionId)!;
+					session.lastAccess = Date.now();
+					await session.transport.handleRequest(req, res);
+				} else {
+					res.status(200).json({ name: 'whoop-mcp-server', version: '1.0.0', protocol: 'mcp' });
+				}
+				return;
+			}
+
 			if (req.method === 'POST') {
 				let transport: StreamableHTTPServerTransport;
 
