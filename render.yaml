@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: whoop-mcp-server
+    runtime: docker
+    repo: https://github.com/23jmo/whoop-mcp-server
+    branch: main
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: WHOOP_CLIENT_ID
+        sync: false
+      - key: WHOOP_CLIENT_SECRET
+        sync: false
+      - key: WHOOP_REDIRECT_URI
+        sync: false
+      - key: DB_PATH
+        value: /data/whoop.db
+      - key: MCP_MODE
+        value: http
+      - key: PORT
+        value: "3000"
+    disk:
+      name: whoop-data
+      mountPath: /data
+      sizeGB: 1
