@@ -352,11 +352,17 @@ async function main(): Promise<void> {
 				res.status(204).end();
 				return;
 			}
-			// MCP StreamableHTTP transport requires text/event-stream in Accept for POST
+			// MCP StreamableHTTP transport requires both application/json and text/event-stream in Accept
 			if (req.method === 'POST' && req.path === '/mcp') {
 				const accept = req.headers.accept ?? '';
-				if (!accept.includes('text/event-stream')) {
-					req.headers.accept = accept ? `${accept}, text/event-stream` : 'application/json, text/event-stream';
+				const hasJson = accept.includes('application/json');
+				const hasSse = accept.includes('text/event-stream');
+				if (!hasJson || !hasSse) {
+					const parts: string[] = [];
+					if (!hasJson) parts.push('application/json');
+					if (accept) parts.push(accept);
+					if (!hasSse) parts.push('text/event-stream');
+					req.headers.accept = parts.join(', ');
 				}
 			}
 			next();
