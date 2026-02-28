@@ -352,17 +352,16 @@ async function main(): Promise<void> {
 				res.status(204).end();
 				return;
 			}
-			// MCP StreamableHTTP transport requires both application/json and text/event-stream in Accept
+			// MCP StreamableHTTP transport requires both application/json and text/event-stream in Accept.
+			// The SDK uses @hono/node-server which reads rawHeaders, so we must modify both.
 			if (req.method === 'POST' && req.path === '/mcp') {
-				const accept = req.headers.accept ?? '';
-				const hasJson = accept.includes('application/json');
-				const hasSse = accept.includes('text/event-stream');
-				if (!hasJson || !hasSse) {
-					const parts: string[] = [];
-					if (!hasJson) parts.push('application/json');
-					if (accept) parts.push(accept);
-					if (!hasSse) parts.push('text/event-stream');
-					req.headers.accept = parts.join(', ');
+				const desired = 'application/json, text/event-stream';
+				req.headers.accept = desired;
+				for (let i = 0; i < req.rawHeaders.length; i += 2) {
+					if (req.rawHeaders[i].toLowerCase() === 'accept') {
+						req.rawHeaders[i + 1] = desired;
+						break;
+					}
 				}
 			}
 			next();
