@@ -367,18 +367,16 @@ async function main(): Promise<void> {
 			next();
 		});
 
-		// OAuth discovery stubs — Claude probes these before connecting
-		app.get('/.well-known/oauth-protected-resource', (req: Request, res: Response) => {
-			res.json({ resource: `https://${req.hostname}`, authorization_servers: [] });
+		// Return 404 for OAuth discovery so Claude Code skips transport-level auth.
+		// WHOOP authentication is handled internally via get_auth_url tool.
+		app.get('/.well-known/oauth-protected-resource', (_req: Request, res: Response) => {
+			res.status(404).end();
 		});
-		app.get('/.well-known/oauth-protected-resource/mcp', (req: Request, res: Response) => {
-			res.json({ resource: `https://${req.hostname}`, authorization_servers: [] });
+		app.get('/.well-known/oauth-protected-resource/mcp', (_req: Request, res: Response) => {
+			res.status(404).end();
 		});
 		app.get('/.well-known/oauth-authorization-server', (_req: Request, res: Response) => {
-			res.status(200).json({});
-		});
-		app.post('/register', (_req: Request, res: Response) => {
-			res.status(200).json({});
+			res.status(404).end();
 		});
 
 		app.get('/callback', async (req: Request, res: Response) => {
