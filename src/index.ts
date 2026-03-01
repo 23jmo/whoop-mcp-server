@@ -311,12 +311,12 @@ function createMcpServer(): Server {
 				}
 
 				case 'get_auth_url': {
-					const scopes = ['read:profile', 'read:body_measurement', 'read:cycles', 'read:recovery', 'read:sleep', 'read:workout', 'offline'];
-					const url = client.getAuthorizationUrl(scopes);
+					const baseUrl = config.redirectUri.replace('/callback', '');
+					const authUrl = `${baseUrl}/auth`;
 					return {
 						content: [{
 							type: 'text',
-							text: `To authorize with Whoop:\n\n1. Visit: ${url}\n2. Log in and authorize\n3. You'll be redirected back automatically\n\nRedirect URI: ${config.redirectUri}`,
+							text: `To authorize with Whoop:\n\n1. Visit: ${authUrl}\n2. Log in and authorize\n3. You'll be redirected back automatically`,
 						}],
 					};
 				}
@@ -377,6 +377,12 @@ async function main(): Promise<void> {
 		});
 		app.get('/.well-known/oauth-authorization-server', (_req: Request, res: Response) => {
 			res.status(404).end();
+		});
+
+		app.get('/auth', (_req: Request, res: Response) => {
+			const scopes = ['read:profile', 'read:body_measurement', 'read:cycles', 'read:recovery', 'read:sleep', 'read:workout', 'offline'];
+			const url = client.getAuthorizationUrl(scopes);
+			res.redirect(url);
 		});
 
 		app.get('/callback', async (req: Request, res: Response) => {
