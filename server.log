@@ -1,0 +1,1 @@
+Accept header: before="text/event-stream" after="application/json, text/event-stream"
